@@ -83,7 +83,7 @@ build_script:
   # Ubuntu 16.04 LTS
   #------------------
   - sh: mkdir bin && cd bin
-  - sh: cmake -DCMAKE_BUILD_TYPE=$configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" ..
+  - sh: cmake -DCMAKE_BUILD_TYPE=$Configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" ..
   - sh: make -j4
 
 test_script:

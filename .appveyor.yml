@@ -11,7 +11,7 @@ platform:
 # specify custom environment variables
 environment:
   DUMMY: dummy
-  APPVEYOR_RDP_PASSWORD: mishutka52
+  APPVEYOR_RDP_PASSWORD: mishutka)52
 
 # build configuration, i.e. Debug, Release, etc.
 configuration:

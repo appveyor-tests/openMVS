@@ -29,6 +29,7 @@ branches:
   except:
     - gh-pages
 
+cache: c:\tools\vcpkg\installed\
 # scripts that run after cloning repository
 install:
   #------------------
@@ -45,7 +46,10 @@ install:
   # remove outdated versions
   - cmd: vcpkg remove --outdated --recurse
 
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization 
+  - appveyor exit
+  
   # install required dependencies
   - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization eigen3 ceres opencv cgal
 

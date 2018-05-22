@@ -84,6 +84,7 @@ build_script:
   #------------------
   - sh: echo $Configuration
   - sh: echo $APPVEYOR_BUILD_FOLDER/VCG
+  - sh: ls -la $APPVEYOR_BUILD_FOLDER/VCG
   - sh: mkdir bin && cd bin
   - sh: cmake -DCMAKE_BUILD_TYPE=$Configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" ..
   - sh: make -j4

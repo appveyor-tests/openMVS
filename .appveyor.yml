@@ -29,7 +29,6 @@ branches:
   except:
     - gh-pages
 
-cache: c:\tools\vcpkg\installed\
 # scripts that run after cloning repository
 install:
   #------------------

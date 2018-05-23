@@ -45,7 +45,7 @@ install:
   # remove outdated versions
   - cmd: vcpkg remove --outdated --recurse
 
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization 
   - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% opencv --debug
   - appveyor exit
@@ -70,7 +70,9 @@ install:
 
 # preserve contents of selected directories and files across project builds
 cache:
-  - C:\tools\vcpkg\installed -> .appveyor.yml
+  - C:\tools\vcpkg\installed
+
+#-> .appveyor.yml
 
 build_script:
   # get VCG library

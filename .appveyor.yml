@@ -2,8 +2,8 @@
 version: "{build}"
 
 image:
-  #- Visual Studio 2017
-  - Ubuntu
+  - Visual Studio 2017
+  #- Ubuntu
 
 platform:
   - x64
@@ -46,15 +46,15 @@ install:
   - cmd: vcpkg remove --outdated --recurse
 
   #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization 
-  - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% opencv --debug
-  - appveyor exit
+  #- cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization 
+  #- cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% opencv --debug
+  #- appveyor exit
   
   # install required dependencies
-  - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization eigen3 ceres opencv cgal
+  #- cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% zlib boost-iostreams boost-program-options boost-system boost-serialization eigen3 ceres opencv cgal
 
   # install optional dependencies
-  - cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% glew glfw3
+  #- cmd: vcpkg install --recurse --triplet %VCPKG_ARCH% glew glfw3
 
   - cmd: vcpkg integrate install
   - cmd: cd "%APPVEYOR_BUILD_FOLDER%"

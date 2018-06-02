@@ -2,8 +2,8 @@
 version: "{build}"
 
 image:
-  - Visual Studio 2017
-  #- Ubuntu
+  #- Visual Studio 2017
+  - Ubuntu
 
 platform:
   - x64
@@ -71,6 +71,7 @@ install:
 # preserve contents of selected directories and files across project builds
 cache:
   - C:\tools\vcpkg\installed
+  - /usr/lib/x86_64-linux-gnu/
 
 #-> .appveyor.yml
 

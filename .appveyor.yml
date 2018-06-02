@@ -70,8 +70,8 @@ install:
 
 # preserve contents of selected directories and files across project builds
 cache:
-  - C:\tools\vcpkg\installed
-  - /usr/lib/x86_64-linux-gnu/
+  - 'C:\tools\vcpkg\installed'
+  - '/usr/lib/x86_64-linux-gnu/'
 
 #-> .appveyor.yml
 

@@ -185,7 +185,7 @@ bool PointCloud::Load(const String& fileName)
 } // Load
 
 // save the dense point cloud as PLY file
-bool PointCloud::Save(const String& fileName) const
+bool PointCloud::Save(const String& fileName, bool bLegacyTypes) const
 {
 	if (points.IsEmpty())
 		return false;
@@ -193,8 +193,10 @@ bool PointCloud::Save(const String& fileName) const
 
 	// create PLY object
 	ASSERT(!fileName.IsEmpty());
-	Util::ensureDirectory(fileName);
+	Util::ensureFolder(fileName);
 	PLY ply;
+	if (bLegacyTypes)
+		ply.set_legacy_type_names();
 	if (!ply.write(fileName, 1, BasicPLY::elem_names, PLY::BINARY_LE, 64*1024))
 		return false;
 

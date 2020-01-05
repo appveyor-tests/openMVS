@@ -536,11 +536,12 @@ bool intersect(const delaunay_t& Tr, const segment_t& seg, const std::vector<fac
 		const int nb_coplanar(intersect(Tr.triangle(in_facet), seg, coplanar));
 		if (nb_coplanar >= 0) {
 			// skip this cell if the intersection is not in the desired direction
-			inter.dist = inter.ray.IntersectsDist(getFacetPlane(in_facet));
-			if ((inter.dist > prevDist) != inter.bigger)
+			const REAL interDist(inter.ray.IntersectsDist(getFacetPlane(in_facet)));
+			if ((interDist > prevDist) != inter.bigger)
 				continue;
 			// vertices of facet i: j = 4 * i, vertices = facet_vertex_order[j,j+1,j+2] negative orientation
 			inter.facet = in_facet;
+			inter.dist = interDist;
 			switch (nb_coplanar) {
 			case 0: {
 				// face intersection
@@ -570,8 +571,12 @@ bool intersect(const delaunay_t& Tr, const segment_t& seg, const std::vector<fac
 				do {
 					const cell_handle_t c(ifc);
 					if (c == inter.facet.first) continue;
-					out_facets.push_back(facet_t(c, c->index(inter.v1)));
-					out_facets.push_back(facet_t(c, c->index(inter.v2)));
+					const facet_t f1(c, c->index(inter.v1));
+					if (!Tr.is_infinite(f1))
+						out_facets.push_back(f1);
+					const facet_t f2(c, c->index(inter.v2));
+					if (!Tr.is_infinite(f2))
+						out_facets.push_back(f2);
 				} while (++ifc != efc);
 				return true; }
 			case 2: {
@@ -601,19 +606,24 @@ bool intersect(const delaunay_t& Tr, const segment_t& seg, const std::vector<fac
 				// the faces in the cells around opposing this common vertex
 				out_facets.clear();
 				struct cell_back_inserter_t {
+					const delaunay_t& Tr;
 					const vertex_handle_t v;
 					const cell_handle_t current_cell;
 					std::vector<facet_t>& out_facets;
-					inline cell_back_inserter_t(const intersection_t& inter, std::vector<facet_t>& _out_facets)
-						: v(inter.v1), current_cell(inter.facet.first), out_facets(_out_facets) {}
+					inline cell_back_inserter_t(const delaunay_t& _Tr, const intersection_t& inter, std::vector<facet_t>& _out_facets)
+						: Tr(_Tr), v(inter.v1), current_cell(inter.facet.first), out_facets(_out_facets) {}
 					inline cell_back_inserter_t& operator*() { return *this; }
 					inline cell_back_inserter_t& operator++(int) { return *this; }
 					inline void operator=(cell_handle_t c) {
-						if (c != current_cell)
-							out_facets.push_back(facet_t(c, c->index(v)));
+						if (c == current_cell)
+							return;
+						const facet_t f(c, c->index(v));
+						if (Tr.is_infinite(f))
+							return;
+						out_facets.push_back(f);
 					}
 				};
-				Tr.finite_incident_cells(inter.v1, cell_back_inserter_t(inter, out_facets));
+				Tr.finite_incident_cells(inter.v1, cell_back_inserter_t(Tr, inter, out_facets));
 				return true; }
 			}
 			// coplanar with 3 edges = tangent = impossible?
@@ -724,7 +734,21 @@ float computePlaneSphereAngle(const delaunay_t& Tr, const facet_t& facet)
 			return 0.5f;
 
 	// compute the co-tangent to the circumscribed sphere in one of the vertices
+	#if CGAL_VERSION_NR < 1041101000
 	const Point3f cc(CGAL2MVS<float>(facet.first->circumcenter(Tr.geom_traits())));
+	#else
+	struct Tools {
+		static point_t circumcenter(const delaunay_t& Tr, const facet_t& facet) {
+			return Tr.geom_traits().construct_circumcenter_3_object()(
+				facet.first->vertex(0)->point(),
+				facet.first->vertex(1)->point(),
+				facet.first->vertex(2)->point(),
+				facet.first->vertex(3)->point()
+			);
+		}
+	};
+	const Point3f cc(CGAL2MVS<float>(Tools::circumcenter(Tr, facet)));
+	#endif
 	const Point3f ct(cc-v0);
 	const float ctLenSq(normSq(ct));
 	if (ctLenSq == 0.f)

@@ -2,7 +2,7 @@
 version: "{build}"
 
 image:
-  - Visual Studio 2017
+#  - Visual Studio 2017
   - ubuntu1804
 
 platform:
@@ -15,7 +15,7 @@ environment:
 # build configuration, i.e. Debug, Release, etc.
 configuration:
   - Debug
-  - Release
+#  - Release
 
 # scripts that are called at very beginning, before repo cloning
 init:
@@ -31,6 +31,9 @@ init:
   #------------------
   - sh: lsb_release -a
   - sh: cmake --version
+  - sh: update-alternatives --display c++
+  - sh: update-alternatives --display gcc
+  - sh: ll /var/cache/apt/archives/
 
 # branches to build
 branches:

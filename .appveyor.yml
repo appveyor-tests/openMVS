@@ -33,7 +33,7 @@ init:
   - sh: cmake --version
   - sh: update-alternatives --display c++
   - sh: update-alternatives --display gcc
-  - sh: ll /var/cache/apt/archives/
+  - sh: ls /var/cache/apt/archives/
 
 # branches to build
 branches:

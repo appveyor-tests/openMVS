@@ -118,8 +118,8 @@ build_script:
   - sh: export GCC_COLORS=
   - sh: cmake -DCMAKE_BUILD_TYPE=$Configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" -DCMAKE_COLOR_MAKEFILE=off ..
   - sh: cat CMakeCache.txt
-  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
-  - sh: make 2>make.err
+#  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+  - sh: make #2>make.err
 
 test_script:
   #- cmd: ctest --build-config %Configuration% --parallel 4 --output-on-failure
@@ -130,15 +130,16 @@ on_success:
   - cmd: appveyor PushArtifact OpenMVS_x64.7z
   - sh: |
       if [ -f "$APPVEYOR_BUILD_FOLDER/bin/make.err" ]; then
-          appveyor PushArtifact make.err
+          appveyor PushArtifact "$APPVEYOR_BUILD_FOLDER/bin/make.err"
       fi
 
 on_failure:
   - sh: |
       if [ -f "$APPVEYOR_BUILD_FOLDER/bin/make.err" ]; then
-          appveyor PushArtifact make.err
+          appveyor PushArtifact "$APPVEYOR_BUILD_FOLDER/bin/make.err"
       fi
-        
+      journalctl  -u appveyor-build-agent.service -S today >aba.log
+      appveyor PushArtifact aba.log
         
         
         

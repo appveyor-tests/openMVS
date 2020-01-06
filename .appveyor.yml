@@ -119,7 +119,7 @@ build_script:
   - sh: cmake -DCMAKE_BUILD_TYPE=$Configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" -DCMAKE_COLOR_MAKEFILE=off ..
   - sh: cat CMakeCache.txt
   - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
-  - sh: make
+  - sh: make 2>make.err
 
 test_script:
   #- cmd: ctest --build-config %Configuration% --parallel 4 --output-on-failure
@@ -128,3 +128,17 @@ test_script:
 on_success:
   - cmd: 7z a OpenMVS_x64.7z "C:\projects\openmvs\bin\bin\vc15\x64\%Configuration%\*.exe" "C:\projects\openmvs\bin\bin\vc15\x64\%Configuration%\*.dll"
   - cmd: appveyor PushArtifact OpenMVS_x64.7z
+  - sh: |
+      if [ -f "$APPVEYOR_BUILD_FOLDER/bin/make.err" ]; then
+          appveyor PushArtifact make.err
+      fi
+
+on_failure:
+  - sh: |
+      if [ -f "$APPVEYOR_BUILD_FOLDER/bin/make.err" ]; then
+          appveyor PushArtifact make.err
+      fi
+        
+        
+        
+        

@@ -119,7 +119,8 @@ build_script:
   - sh: cmake -DCMAKE_BUILD_TYPE=$Configuration -DVCG_ROOT="$APPVEYOR_BUILD_FOLDER/VCG" -DCMAKE_COLOR_MAKEFILE=off ..
   - sh: cat CMakeCache.txt
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
-  - sh: make #2>make.err
+  - sh: |
+      make 2>&1   #make.err
 
 test_script:
   #- cmd: ctest --build-config %Configuration% --parallel 4 --output-on-failure
